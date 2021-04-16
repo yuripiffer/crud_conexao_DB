@@ -1,19 +1,10 @@
-nome="Ana Maria"
-id=None
-cpf=80
-lista = [nome, id, cpf]
-if any(lista):
-    frase_where = "WHERE"
-    if nome is not None:
-        frase_where += f" nome = '{nome}',"
-    if id is not None:
-        frase_where += f" id = '{id}',"
-    if cpf is not None:
-        frase_where += f" cpf = '{cpf}',"
-    print(frase_where)
 
 
+class Pessoa:
+    def __init__(self, nome:str, altura:float, idade:int):
+        self.nome = nome
+        self.altura = altura
+        self.idade = idade
 
-# print(any(listao))
-# if all[nome, id, cpf] != None:
-#     print("Não tem none")
+yuri = Pessoa(nome="Yuri", altura=2, idade=2.5)
+print(yuri.idade)

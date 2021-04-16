@@ -31,6 +31,12 @@ class ConnectDB():
         self.conexao.commit()
 
     def crud_create(self, tabela: str, nome: str, cpf: str, idade:int, altura:float):
+        # try:
+        #     if nome
+        # except:
+        #
+        #     pass
+        # else:
         comando = f"INSERT INTO {tabela} VALUES ('{nome}', DEFAULT, '{cpf}', '{idade}','{altura}' )"
         self.executa_e_persiste(comando)
 
@@ -42,6 +48,8 @@ class ConnectDB():
         print(pd.DataFrame(self.cursor.fetchall(), columns=lista_nomes_colunas))
 
     def crud_update(self, tabela: str, id: int, nome=None, cpf=None, idade=None, altura=None):
+
+        #validação de try / except (sem while)
         lista = [nome, cpf, idade, altura]
         if any(lista):
             frase_set = "SET "
