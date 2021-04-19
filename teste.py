@@ -1,10 +1,15 @@
+#
+#
+# class Pessoa:
+#     def __init__(self, nome:str, altura:float, idade:int):
+#         self.nome = nome
+#         self.altura = altura
+#         self.idade = idade
+#
+# yuri = Pessoa(nome="Yuri", altura=2, idade=2.5)
+# print(yuri.idade)
 
 
-class Pessoa:
-    def __init__(self, nome:str, altura:float, idade:int):
-        self.nome = nome
-        self.altura = altura
-        self.idade = idade
+aula = {"Nome": "Adriano"}
 
-yuri = Pessoa(nome="Yuri", altura=2, idade=2.5)
-print(yuri.idade)
+for k,v in aula.

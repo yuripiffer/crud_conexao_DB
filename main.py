@@ -103,7 +103,7 @@ class ConnectDB():
 
 
 
-testeDB = ConnectDB(db_name="Llama")
+#testeDB = ConnectDB(db_name="Llama")
 # testeDB.crud_create("tabela_teste","Lara", "02000", 29, 1.89)
 # testeDB.crud_update("tabela_teste",id=16, nome="NomePorUpdate", cpf="111111")
 #testeDB.crud_read("tabela_teste")
