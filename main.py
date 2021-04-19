@@ -1,5 +1,6 @@
 import MySQLdb
 import pandas as pd
+import lib
 
 """
 1.	Criar uma classe para o banco de dados
@@ -26,48 +27,60 @@ class ConnectDB():
         self.conexao = MySQLdb.connect(db=self.db_name, user=self.user, host=self.host, port=self.port)
         self.cursor = self.conexao.cursor()
 
-    def executa_e_persiste(self, comando:str):
+    def executa_e_persiste(self, comando: str):
         self.cursor.execute(comando)
         self.conexao.commit()
 
-    def crud_create(self, tabela: str, nome: str, cpf: str, idade:int, altura:float):
-        # try:
-        #     if nome
-        # except:
-        #
-        #     pass
-        # else:
-        comando = f"INSERT INTO {tabela} VALUES ('{nome}', DEFAULT, '{cpf}', '{idade}','{altura}' )"
-        self.executa_e_persiste(comando)
+    def crud_create(self, tabela: str, nome: str, cpf: str, idade: int, altura: float):
+        try:
+            nome = lib.valida_nome(nome)
+            cpf = lib.valida_cpf(cpf)
+            idade = lib.valida_idade(idade)
+            altura = lib.valida_altura_metros(altura)
+
+            dados_lista = [nome, cpf, idade, altura]
+            if any(dados_lista) == False:
+                raise Exception
+        except:
+            print("Problemas com os dados inseridos: ")
+            # >>>> COMO PRINTAR AS VARIÁVEIS QUE DERAM PAU ??????
+        else:
+            comando = f"INSERT INTO {tabela} VALUES ('{nome}', DEFAULT, '{cpf}', '{idade}','{altura}' )"
+            self.executa_e_persiste(comando)
 
     def crud_read(self, tabela: str):
         self.cursor.execute(f"select * from {tabela}")
-        lista_nomes_colunas=[]
+        lista_nomes_colunas = []
         for col in self.cursor.description:
             lista_nomes_colunas.append(col[0])
         print(pd.DataFrame(self.cursor.fetchall(), columns=lista_nomes_colunas))
 
     def crud_update(self, tabela: str, id: int, nome=None, cpf=None, idade=None, altura=None):
-
-        #validação de try / except (sem while)
-        lista = [nome, cpf, idade, altura]
-        if any(lista):
-            frase_set = "SET "
-            if nome is not None:
-                frase_set += f" nome = '{nome}' ,"
-            if cpf is not None:
-                frase_set += f" cpf = '{cpf}' ,"
-            if idade is not None:
-                frase_set += f" idade = '{idade}' ,"
-            if altura is not None:
-                frase_set += f" altura = '{altura}' ,"
-            frase_set = frase_set[:-2]  # exclui vírgula e espaço
-
+        try:
+            lista = [nome, cpf, idade, altura]
+            if any(lista):
+                frase_set = "SET "
+                if nome is not None:
+                    frase_set += f" nome = '{nome}' ,"
+                if cpf is not None:
+                    frase_set += f" cpf = '{cpf}' ,"
+                if idade is not None:
+                    frase_set += f" idade = '{idade}' ,"
+                if altura is not None:
+                    frase_set += f" altura = '{altura}' ,"
+                frase_set = frase_set[:-2]  # exclui vírgula e espaço
+            else:
+                raise Exception
+        except:
+            print("Nenhuma atualização de nome, CPF, idade ou altura foi informada.")
+        else:
             comando = f"UPDATE {tabela} " + frase_set + f" WHERE id = {id}"
+            # >>>>> SE NÃO ENCONTRA O ID, FAZ OUTRA RAISE EXCEPTION?????
             self.executa_e_persiste(comando)
 
     def crud_delete(self, tabela: str, nome=None, id=None, cpf=None, idade=None, altura=None):
         lista = [nome, id, cpf, idade, altura]
+
         if any(lista):
             frase_where = "WHERE "
             if nome is not None:
@@ -84,21 +97,17 @@ class ConnectDB():
             comando = f"DELETE FROM {tabela} " + frase_where
             self.executa_e_persiste(comando)
         else:
-            #Delete all
+            # Delete all
             comando = f"DELETE FROM {tabela}"
             self.executa_e_persiste(comando)
 
 
 
-
-
-
-
 testeDB = ConnectDB(db_name="Llama")
-#testeDB.crud_create("tabela_teste","Lara", "02000", 29, 1.89)
-#testeDB.crud_update("tabela_teste",id=16, nome="NomePorUpdate", cpf="111111")
-testeDB.crud_read("tabela_teste")
-#esteDB.crud_delete("tabela_teste", nome="Maria")
+# testeDB.crud_create("tabela_teste","Lara", "02000", 29, 1.89)
+# testeDB.crud_update("tabela_teste",id=16, nome="NomePorUpdate", cpf="111111")
+#testeDB.crud_read("tabela_teste")
+# esteDB.crud_delete("tabela_teste", nome="Maria")
 
 
 # testeDB.crud_create("tabela_teste","Ana", "01000", 29, 1.89)
@@ -106,5 +115,3 @@ testeDB.crud_read("tabela_teste")
 # testeDB.crud_create("tabela_teste","Flavia", "03000", 22, 1.76)
 # testeDB.crud_create("tabela_teste","Maria", "04000", 29, 1.66)
 # testeDB.crud_create("tabela_teste","Naiane", "05000", 86, 1.67)
-
-
